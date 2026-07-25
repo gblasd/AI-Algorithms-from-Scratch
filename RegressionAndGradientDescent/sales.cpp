@@ -7,38 +7,33 @@
 // using namespace std;
 
 int main() {
-    // Step 1: get the dataset
-    std::vector<double> advertising_costs = {100, 200, 300, 400, 500};  // independent variable
-    std::vector<double> sales = {300, 500, 600, 700, 800};              // dependet variable
-    int n = advertising_costs.size();
+    // Asume we have this data: hours of adviersement vs weekly sales
+    std::vector<double> ad_hours = {10, 20, 30, 40, 50};            // independent variable : x
+    std::vector<double> weekly_sales = {200, 420, 650, 800, 950};   // dependent variable   : y
+    int n = ad_hours.size();
 
-    // Step 2: Compute the mean of x and y
-    double mean_adv = std::accumulate(advertising_costs.begin(), advertising_costs.end(), 0.0) / n;
-    double mean_sales = std::accumulate(sales.begin(), sales.end(), 0.0) / n;
-
-    /*
-    auto adv_begin = advertising_costs.end();
-    std::cout << *adv_begin << std::endl;
-    */
+    // Using the formulas to calculate the slope (m) anf y-intercept (c)
+    double mean_x = std::accumulate(ad_hours.begin(), ad_hours.end(), 0.0) / n;
+    double mean_y = std::accumulate(weekly_sales.begin(), weekly_sales.end(), 0.0) / n;
 
     // Step 3: Calculate the coefficients
     double num = 0.0, den = 0.0;
 
     for (int i = 0; i < n; ++i) {
-        num += (advertising_costs[i] - mean_adv) * (sales[i] - mean_sales);
-        den += (advertising_costs[i] - mean_adv) * (advertising_costs[i] - mean_adv);
+        num += (ad_hours[i] - mean_x) * (weekly_sales[i] - mean_y);
+        den += (ad_hours[i] - mean_x) * (ad_hours[i] - mean_x); // ^2
     }
 
-    double m = num / den;
-    double c = mean_sales - m * mean_adv;
+    double m = num / den; // slop of the line
+    double c = mean_y - m * mean_x; // intercept
 
     // The model
     std::cout << "Model: Sales = " << std::fixed << std::setprecision(2) << c
-              << " + " << m << "*Advertising_Costs" << std::endl;
+              << " + " << m << "*Advertising_Hours" << std::endl;
 
     std::vector<double> y_pred(n);
     for (int i = 0; i < n; ++i) {
-        y_pred[i] = c + m * advertising_costs[i];
+        y_pred[i] = c + m * ad_hours[i];
     } 
 
     return 0;
